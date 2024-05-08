@@ -13,6 +13,14 @@
 
 namespace leveldb {
 
+/**
+ * This Arena is used to manage memory usage.
+ *
+ * Pros:
+ *    1. Reduce the number of calls new and delete to reduce system call.
+ *    2. Reduce the memory fragmentation.
+ *    3. Easy to statistics and monitoring memory usage.
+ */
 class Arena {
  public:
   Arena();
@@ -38,11 +46,12 @@ class Arena {
   char* AllocateFallback(size_t bytes);
   char* AllocateNewBlock(size_t block_bytes);
 
-  // Allocation state
+  // Allocation state of the current block
   char* alloc_ptr_;
   size_t alloc_bytes_remaining_;
 
   // Array of new[] allocated memory blocks
+  // Using this vector to store the first address of these allocated memory pages.
   std::vector<char*> blocks_;
 
   // Total memory usage of the arena.
